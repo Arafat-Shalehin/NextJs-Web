@@ -54,9 +54,12 @@ export default function Navbar() {
             </div>
           ) : (
             // LOGIN / REGISTER WHEN LOGGED OUT
-            <div className="hidden md:block">
-              <Link href="/login" className="btn btn-primary btn-sm">
-                Login / Register
+            <div className="hidden md:block items-center space-x-2">
+              <Link href="/login" className="btn btn-primary btn-sm border px-5 py-1 rounded hover:bg-white/50 hover:text-black transition-colors duration-400">
+                Login
+              </Link>
+              <Link href="/register" className="btn btn-primary btn-sm border px-5 py-1 rounded hover:bg-white/50 hover:text-black transition-colors duration-400">
+                Register
               </Link>
             </div>
           )}

@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { FaArrowCircleDown } from "react-icons/fa";
 
 export default function Hero() {
   return (
-    <section className="w-full bg-black flex items-center justify-center px-6 py-10 mt-20">
+    <section className="w-full bg-black flex items-center justify-center rounded-xl px-6 py-10 mt-20">
       {/* Outer wrapper with glowing gradient */}
       <div className="relative w-full max-w-6xl">
         {/* Rainbow Glow Behind Card */}
@@ -45,10 +46,10 @@ export default function Hero() {
                 px-6 py-3 text-lg font-medium rounded-xl
                 bg-linear-to-r from-purple-500 to-blue-500
                 text-white shadow-lg shadow-purple-500/30
-                hover:opacity-90 transition
+                transition flex items-center gap-2
               "
             >
-              Explore Now
+              Explore More Below <FaArrowCircleDown size={25}/>
             </button>
           </motion.div>
 
