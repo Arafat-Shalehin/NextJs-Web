@@ -8,10 +8,10 @@ export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // temporary for UI
 
   return (
-    <div className="navbar bg-base-100 sticky top-0 z-50 shadow-sm">
-      <div className="container mx-auto">
+    <div className="navbar bg-base-100 sticky top-0 shadow-sm">
+      <div className="container mx-auto flex items-center justify-between py-3">
         {/* LEFT - LOGO */}
-        <div className="flex-1">
+        <div>
           <Link href="/" className="text-2xl font-bold text-primary">
             SportsHub
           </Link>
@@ -28,7 +28,6 @@ export default function Navbar() {
 
         {/* RIGHT - LOGIN / USER */}
         <div className="flex-none">
-
           {isLoggedIn ? (
             // DROPDOWN WHEN LOGGED IN
             <div className="dropdown dropdown-end">
@@ -42,9 +41,15 @@ export default function Navbar() {
                 <li className="font-medium px-3 py-2">
                   Logged in as: John Doe
                 </li>
-                <li><Link href="/add-product">Add Product</Link></li>
-                <li><Link href="/manage-products">Manage Products</Link></li>
-                <li><button>Logout</button></li>
+                <li>
+                  <Link href="/add-product">Add Product</Link>
+                </li>
+                <li>
+                  <Link href="/manage-products">Manage Products</Link>
+                </li>
+                <li>
+                  <button>Logout</button>
+                </li>
               </ul>
             </div>
           ) : (
@@ -55,55 +60,59 @@ export default function Navbar() {
               </Link>
             </div>
           )}
+        </div>
 
-          {/* MOBILE MENU BUTTON */}
-          <div className="md:hidden ml-2">
-            <MobileMenu isLoggedIn={isLoggedIn} />
-          </div>
+        {/* Mobile Menu */}
+        <div className="md:hidden">
+          {/* change popover-1 and --anchor-1 names. Use unique names for each dropdown */}
+          {/* For TSX uncomment the commented types below */}
+          <button
+            className="btn"
+            popoverTarget="popover-1"
+            style={{ anchorName: "--anchor-1" } /* as React.CSSProperties */}
+          >
+            Menu
+          </button>
+
+          <ul
+            className="dropdown relative left-73.5 sm:left-110 top-10 menu w-40
+            rounded-box bg-base-100 shadow-sm gap-6 text-lg font-medium"
+            popover="auto"
+            id="popover-1"
+            style={
+              { positionAnchor: "--anchor-1" } /* as React.CSSProperties */
+            }
+          >
+            <li>
+              <Link href="/">Home</Link>
+            </li>
+            <li>
+              <Link href="/news">News</Link>
+            </li>
+            <li>
+              <Link href="/products">Products</Link>
+            </li>
+            <li>
+              <Link href="/about">About</Link>
+            </li>
+            <li>
+              <Link href="/contact">Contact</Link>
+            </li>
+
+            <li className="mt-2 border-t pt-2">
+              {isLoggedIn ? (
+                <>
+                  <Link href="/add-product">Add Product</Link>
+                  <Link href="/manage-products">Manage Products</Link>
+                  <button>Logout</button>
+                </>
+              ) : (
+                <Link href="/login">Login / Register</Link>
+              )}
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
-  );
-}
-
-/* MOBILE MENU COMPONENT */
-function MobileMenu({ isLoggedIn }) {
-  return (
-    <div className="dropdown dropdown-end">
-      <label tabIndex={0} className="btn btn-ghost btn-circle">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </label>
-
-      <ul
-        tabIndex={0}
-        className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-48"
-      >
-        <li><Link href="/">Home</Link></li>
-        <li><Link href="/news">News</Link></li>
-        <li><Link href="/products">Products</Link></li>
-        <li><Link href="/about">About</Link></li>
-        <li><Link href="/contact">Contact</Link></li>
-
-        <li className="mt-2 border-t pt-2">
-          {isLoggedIn ? (
-            <>
-              <Link href="/add-product">Add Product</Link>
-              <Link href="/manage-products">Manage Products</Link>
-              <button>Logout</button>
-            </>
-          ) : (
-            <Link href="/login">Login / Register</Link>
-          )}
-        </li>
-      </ul>
     </div>
   );
 }

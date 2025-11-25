@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="min-h-screen flex flex-col">
+        <div>
 
           <header className="border-b">
             <div className="container">
@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
             </div>
           </header>
 
-          <main className="flex-1">{children}</main>
+          <main className="container min-h-screen">{children}</main>
 
           <footer className="border-t py-6">
             <div className="container">
