@@ -1,10 +1,11 @@
 import { NextResponse, NextRequest } from "next/server";
 import connectionToDatabase from "@/lib/db";
 import User from "@/models/User";
+import bcryptjs from 'bcryptjs';
 
 export async function POST(NextRequest) {
   try {
-    const { email, password } = await NextRequest.json();
+    const { name, email, password } = await NextRequest.json();
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and Password are required." },
@@ -23,20 +24,22 @@ export async function POST(NextRequest) {
       );
     }
 
-    await User.create({
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
+
+    const savedUser = await User.create({
+      name,
       email,
-      password,
+      password: hashedPassword,
     });
+
+    console.log(savedUser);
 
     return NextResponse.json(
       { message: "User registered successfully." },
       { status: 201 }
     );
 
-    // const {name, email} = await NextRequest.json()
-    // const newUser = new User({name, email})
-    // await newUser.save()
-    // return NextResponse.json(newUser, {status: 201})
   } catch (error) {
     console.log(error);
     return NextResponse.json(

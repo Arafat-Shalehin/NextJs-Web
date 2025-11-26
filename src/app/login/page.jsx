@@ -1,8 +1,36 @@
 // app/login/page.tsx
+"use client"
+
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
 export default function LoginPage() {
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const router = useRouter();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post("/api/auth/login", user);
+
+      console.log(response);
+      if (response.status === 200) {
+        router.push("/profile");
+      }
+    } catch (error) {
+      console.log(error);
+      console.log("Login Failed.");
+    }
+  };
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#050608] text-white">
       {/* Decorative circuit corners */}
@@ -82,7 +110,7 @@ export default function LoginPage() {
           </Link>
         </p>
 
-        <form className="mt-8 space-y-4">
+        <form onSubmit={handleLogin} className="mt-8 space-y-4">
           {/* Email */}
           <div className="space-y-1">
             <label
@@ -112,6 +140,8 @@ export default function LoginPage() {
                 type="email"
                 placeholder="email address"
                 className="h-11 w-full rounded-xl border border-white/5 bg-[#060709] px-10 text-sm text-gray-100 placeholder-gray-500 outline-none transition ring-0 focus:border-blue-500/70 focus:ring-2 focus:ring-blue-500/60"
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                required
               />
             </div>
           </div>
@@ -145,6 +175,8 @@ export default function LoginPage() {
                 type="password"
                 placeholder="Password"
                 className="h-11 w-full rounded-xl border border-white/5 bg-[#060709] px-10 text-sm text-gray-100 placeholder-gray-500 outline-none transition ring-0 focus:border-blue-500/70 focus:ring-2 focus:ring-blue-500/60"
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
+                required
               />
             </div>
           </div>

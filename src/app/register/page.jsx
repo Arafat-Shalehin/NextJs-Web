@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import axios from "axios";
 // src/app/register/page.jsx
@@ -8,29 +8,28 @@ import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
 export default function RegisterPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/auth/register", {
-        name,
-        email,
-        password
-      }) 
-      
+      const response = await axios.post("/api/auth/register", user);
+
       if (response.status === 201) {
-        router.push('/');
+        router.push("/");
       }
     } catch (error) {
       console.log(error);
+      console.log("Registration Failed.");
     }
-
-  }
+  };
   return (
     <main className="min-h-screen px-4 py-10 flex items-center justify-center">
       <section className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#241b33] text-white shadow-[0_30px_80px_rgba(5,5,25,0.85)] md:flex-row">
@@ -78,13 +77,14 @@ export default function RegisterPage() {
                 </label>
                 <input
                   type="text"
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setUser({ ...user, name: e.target.value })}
                   placeholder="Fletcher Doe"
                   className="h-11 w-full rounded-lg border 
                   border-white/10 bg-white/5 px-3 text-sm 
                   text-white placeholder-gray-400 outline-none 
                   transition focus:border-purple-400 focus:ring-2
                   focus:ring-purple-500/40"
+                  required
                 />
               </div>
             </div>
@@ -96,9 +96,10 @@ export default function RegisterPage() {
               </label>
               <input
                 type="email"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
                 placeholder="Email"
                 className="h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white placeholder-gray-400 outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40"
+                required
               />
             </div>
 
@@ -110,9 +111,10 @@ export default function RegisterPage() {
               <div className="relative">
                 <input
                   type="password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setUser({ ...user, password: e.target.value })}
                   placeholder="Enter your password"
                   className="h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 pr-10 text-sm text-white placeholder-gray-400 outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40"
+                  required
                 />
               </div>
             </div>
@@ -123,6 +125,7 @@ export default function RegisterPage() {
                 id="terms"
                 type="checkbox"
                 className="h-4 w-4 rounded border-gray-500 bg-transparent text-purple-500 focus:ring-purple-500/60"
+                required
               />
               <label htmlFor="terms" className="select-none">
                 I agree to the{" "}
