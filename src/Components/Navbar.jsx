@@ -1,119 +1,139 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // temporary for UI
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
 
   return (
     <div className="navbar bg-base-100 sticky top-0 shadow-sm">
       <div className="container mx-auto flex items-center justify-between py-3">
         {/* LEFT - LOGO */}
-        <div>
-          <Link href="/" className="text-2xl font-bold text-primary">
-            SportsHub
-          </Link>
-        </div>
+        <Link href="/" className="text-2xl font-bold text-primary">
+          SportsHub
+        </Link>
 
-        {/* MIDDLE - DESKTOP MENU */}
+        {/* MIDDLE – DESKTOP MENU */}
         <div className="hidden md:flex gap-6 text-sm font-medium">
           <Link href="/">Home</Link>
           <Link href="/news">News</Link>
           <Link href="/products">Products</Link>
           <Link href="/about">About</Link>
           <Link href="/contact">Contact</Link>
+          {isLoggedIn && (
+            <>
+              <Link href="/add-product">Add Product</Link>
+
+              <Link href="/manage-products">Manage Products</Link>
+            </>
+          )}
         </div>
 
-        {/* RIGHT - LOGIN / USER */}
-        <div className="flex-none">
-          {isLoggedIn ? (
-            // DROPDOWN WHEN LOGGED IN
+        {/* RIGHT SECTION */}
+        <div className="flex items-center gap-4">
+          {/* If logged in show avatar dropdown */}
+          {isLoggedIn && (
             <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                <FaUserCircle size={24} />
-              </label>
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+                className="menu dropdown-content mt-3 z-999 p-4 shadow bg-base-100 rounded-box space-y-1"
               >
-                <li className="font-medium px-3 py-2">
-                  Logged in as: John Doe
+                <li className="text-sm text-gray-600 mb-1 pointer-events-none">
+                  Logged in as:
+                  <span className="font-semibold block">
+                    {session?.user?.email}
+                  </span>
                 </li>
+
                 <li>
-                  <Link href="/add-product">Add Product</Link>
-                </li>
-                <li>
-                  <Link href="/manage-products">Manage Products</Link>
-                </li>
-                <li>
-                  <button>Logout</button>
+                  <button
+                    onClick={() => signOut()}
+                    className="btn btn-primary btn-sm mt-2 px-6 py-1 border rounded"
+                  >
+                    Logout
+                  </button>
                 </li>
               </ul>
             </div>
-          ) : (
-            // LOGIN / REGISTER WHEN LOGGED OUT
-            <div className="hidden md:block items-center space-x-2">
-              <Link href="/login" className="btn btn-primary btn-sm border px-5 py-1 rounded hover:bg-white/50 hover:text-black transition-colors duration-400">
+          )}
+
+          {/* If logged out – desktop only */}
+          {!isLoggedIn && (
+            <div className="hidden md:flex items-center space-x-2">
+              <Link
+                href="/login"
+                className="btn btn-primary btn-sm border px-5 py-1 rounded hover:bg-white/50 hover:text-black transition-colors"
+              >
                 Login
               </Link>
-              <Link href="/register" className="btn btn-primary btn-sm border px-5 py-1 rounded hover:bg-white/50 hover:text-black transition-colors duration-400">
+              <Link
+                href="/register"
+                className="btn btn-primary btn-sm border px-5 py-1 rounded hover:bg-white/50 hover:text-black transition-colors"
+              >
                 Register
               </Link>
             </div>
           )}
-        </div>
 
-        {/* Mobile Menu */}
-        <div className="md:hidden">
-          {/* change popover-1 and --anchor-1 names. Use unique names for each dropdown */}
-          {/* For TSX uncomment the commented types below */}
-          <button
-            className="btn"
-            popoverTarget="popover-1"
-            style={{ anchorName: "--anchor-1" } /* as React.CSSProperties */}
-          >
-            Menu
-          </button>
+          {/* MOBILE MENU */}
+          <div className="dropdown dropdown-end md:hidden">
+            <label tabIndex={0} className="btn btn-outline btn-sm">
+              Menu:
+            </label>
+            <ul
+              tabIndex={0}
+              className="menu dropdown-content 
+              mt-3 shadow bg-base-100 
+              rounded-box w-56 space-y-2 *:flex *:flex-col"
+            >
+              <li>
+                <Link href="/">Home</Link>
+              </li>
+              <li>
+                <Link href="/news">News</Link>
+              </li>
+              <li>
+                <Link href="/products">Products</Link>
+              </li>
+              <li>
+                <Link href="/about">About</Link>
+              </li>
+              <li>
+                <Link href="/contact">Contact</Link>
+              </li>
 
-          <ul
-            className="dropdown relative left-73.5 sm:left-110 top-10 menu w-40
-            rounded-box bg-base-100 shadow-sm gap-6 text-lg font-medium"
-            popover="auto"
-            id="popover-1"
-            style={
-              { positionAnchor: "--anchor-1" } /* as React.CSSProperties */
-            }
-          >
-            <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
-              <Link href="/news">News</Link>
-            </li>
-            <li>
-              <Link href="/products">Products</Link>
-            </li>
-            <li>
-              <Link href="/about">About</Link>
-            </li>
-            <li>
-              <Link href="/contact">Contact</Link>
-            </li>
+              <li className="border-t pt-2">
+                {isLoggedIn ? (
+                  <>
+                    <Link href="/add-product">Add Product</Link>
+                    <Link href="/manage-products">Manage Products</Link>
 
-            <li className="mt-2 border-t pt-2">
-              {isLoggedIn ? (
-                <>
-                  <Link href="/add-product">Add Product</Link>
-                  <Link href="/manage-products">Manage Products</Link>
-                  <button>Logout</button>
-                </>
-              ) : (
-                <Link href="/login">Login / Register</Link>
-              )}
-            </li>
-          </ul>
+                    <button
+                      onClick={() => signOut()}
+                      className="btn btn-primary btn-sm mt-2 px-6 py-1 border rounded"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" className="btn btn-primary btn-sm mt-2">
+                      Login
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="btn btn-primary btn-sm mt-2"
+                    >
+                      Register
+                    </Link>
+                  </>
+                )}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

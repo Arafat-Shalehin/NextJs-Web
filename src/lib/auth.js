@@ -36,6 +36,8 @@ export const authOptions = {
             id: user._id.toString(),
             email: user.email,
           };
+
+          console.log("Autho run user: ",user);
         } catch (error) {
           console.log(error);
           return null;

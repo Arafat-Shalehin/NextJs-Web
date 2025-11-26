@@ -1,7 +1,7 @@
 // app/login/page.tsx
-"use client"
+"use client";
 
-import axios from "axios";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -20,11 +20,13 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/auth/login", user);
+      const result = await signIn("credentials", {
+        email: user.email,
+        password: user.password,
+      });
 
-      console.log(response);
-      if (response.status === 200) {
-        router.push("/profile");
+      if (result.ok) {
+        router.push("/");
       }
     } catch (error) {
       console.log(error);
